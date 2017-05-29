@@ -1,0 +1,10 @@
+{
+	"env": {
+		"jid": "{HIPCHAT JABBER ID}/bot",
+		"password": ""
+	},
+	"boss": [
+		"{Room Nickname of Owner}"
+	],
+	"rooms": []
+}
