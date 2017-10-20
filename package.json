@@ -9,6 +9,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "jsmegahal": "^1.2.4",
     "lodash": "^4.17.4",
     "wobot": "^0.8.1"
   }
