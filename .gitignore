@@ -1,3 +1,5 @@
 bot.json
 node_modules
 .idea
+.secret
+markov.txt
