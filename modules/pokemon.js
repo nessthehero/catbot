@@ -20,11 +20,13 @@ module.exports = {
 
 	retrieve: function (msg) {
 
-		console.log('pokemon - inside retrieve');
-		console.log('msg - ', msg);
+		// console.log('pokemon - inside retrieve');
+		// console.log('msg - ', msg);
 
 		var response = [];
 		var alert = 0;
+
+		msg = msg.toLowerCase();
 
 		if (msg.indexOf('!') > -1) {
 			alert = 1;
@@ -136,7 +138,7 @@ module.exports = {
 
 			request(end, function (error, response, body) {
 
-				console.log('requesting initial endpoint');
+				// console.log('requesting initial endpoint');
 
 				if (error) {
 					return reject(new Error(error));
@@ -176,7 +178,7 @@ module.exports = {
 
 			request(url, function (error, response, body) {
 
-				console.log('requesting pokemon info');
+				// console.log('requesting pokemon info');
 
 				var res = {};
 
@@ -210,7 +212,7 @@ module.exports = {
 					sprite: sprite
 				};
 
-				console.log(res);
+				// console.log(res);
 
 				resolve(res);
 
