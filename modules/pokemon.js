@@ -1,22 +1,43 @@
 const util = require('util');
 const request = require('request');
+const config = require('../bot.json');
 
 module.exports = {
 
 	special: [
 		{
+			'key': 'random',
+			'response': 'random'
+		},
+		{
 			'key': 'missingno',
 			'response': 'manual',
-			'manual': 'http://i.imgur.com/YyChnZM.gif'
+			'manual': ['http://i.imgur.com/YyChnZM.gif']
 		},
 		{
 			'key': 'pikablu',
 			'response': 'api',
-			'api': '183'
+			'api': ['183']
+		},
+		{
+			'key': 'pupper',
+			'response': 'api',
+			'api': ['58', '228', '209', '235', '261', '309', '447', '506']
+		},
+		{
+			'key': 'doggo',
+			'response': 'api',
+			'api': ['59', '229', '210', '245', '262', '310', '448', '507', '508', '676']
+		},
+		{
+			'key': 'zipzapcat',
+			'response': 'api',
+			'api': ['243']
 		}
 	],
 
 	endpoint: 'http://pokeapi.co/api/v2/pokemon/%s',
+	maximum: 802,
 
 	retrieve: function (msg) {
 
@@ -35,7 +56,9 @@ module.exports = {
 
 		// Check for help
 		if (msg === 'help') {
-			response.push('`pokemon name/number` or `pokemon help` to get this message. Gen 6 or lower. Uses https://pokeapi.co');
+			response.push('`pokemon name/number` or `pokemon help` to get this message. Gen 7 or lower. Max # is ' + this.maximum + '. Uses https://pokeapi.co');
+			response.push('Add a ! after the pokemon name/number to alert the room')
+			response.push('Also available: random, missingno, pikablu, pupper, doggo');
 		}
 
 		// Check special
@@ -51,7 +74,7 @@ module.exports = {
 				resolve(response);
 			});
 		} else {
-			return this.api(msg);
+			return this.api(msg, alert);
 		}
 
 	},
@@ -62,19 +85,33 @@ module.exports = {
 
 			case 'manual':
 
-				return Promise.resolve([special.manual]);
+				var r = special.manual[Math.floor(Math.random() * special.manual.length)];
+
+				return Promise.resolve([r]);
 
 				break;
 
 			case 'api':
 
+				var r = special.api[Math.floor(Math.random() * special.api.length)];
+
 				return new Promise(function (resolve, reject) {
-					this.api(special.api).then(function (res) {
+					this.api(r).then(function (res) {
 						resolve(res);
 					});
 				}.bind(this));
 
 				break;
+
+			case 'random':
+
+				var r = Math.floor(Math.random() * this.maximum) + 1;
+
+				return new Promise(function (resolve, reject) {
+					this.api(r).then(function (res) {
+						resolve(res);
+					});
+				}.bind(this));
 
 			default:
 
@@ -222,5 +259,4 @@ module.exports = {
 
 	}
 
-}
-;
+};
