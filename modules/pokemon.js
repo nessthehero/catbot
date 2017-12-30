@@ -33,6 +33,11 @@ module.exports = {
 			'key': 'zipzapcat',
 			'response': 'api',
 			'api': ['243']
+		},
+		{
+			'key': 'snek',
+			'response': 'api',
+			'api': ['23', '24']
 		}
 	],
 
@@ -57,7 +62,7 @@ module.exports = {
 		// Check for help
 		if (msg === 'help') {
 			response.push('`pokemon name/number` or `pokemon help` to get this message. Gen 7 or lower. Max # is ' + this.maximum + '. Uses https://pokeapi.co');
-			response.push('Add a ! after the pokemon name/number to alert the room')
+			response.push('Add a ! after the pokemon name/number to alert the room');
 			response.push('Also available: random, missingno, pikablu, pupper, doggo');
 		}
 
@@ -133,6 +138,8 @@ module.exports = {
 
 				this._apiGetInfo(pokemon).then(function (pokemon) {
 
+					// console.log(pokemon);
+
 					response.push(
 						util.format('#%s: %s%s',
 							pokemon['id'],
@@ -140,6 +147,22 @@ module.exports = {
 							(alert) ? ' @here' : ''
 						)
 					);
+
+					// Figure out types
+					var types = pokemon['types'];
+					if (types.length > 0) {
+						var typeStr = [];
+						for (var i in types) {
+							if (types.hasOwnProperty(i)) {
+								if (typeof types[i].type != 'undefined') {
+									if (typeof types[i].type != 'undefined') {
+										typeStr.push(types[i].type.name);
+									}
+								}
+							}
+						}
+						response.push('Type: ' + typeStr.join('/'));
+					}
 
 					response.push(pokemon['sprite']);
 
@@ -246,7 +269,8 @@ module.exports = {
 				res = {
 					id: pokemon['id'],
 					name: name,
-					sprite: sprite
+					sprite: sprite,
+					types: pokemon['types']
 				};
 
 				// console.log(res);
