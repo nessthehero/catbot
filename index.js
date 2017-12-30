@@ -1,9 +1,10 @@
 const wobot = require('wobot');
 const config = require('./bot.json');
-const pokemon = require('./modules/pokemon.js');
 const fs = require('fs');
 const megahal = require('jsmegahal');
 const bukkit = require('./modules/bukkit.js');
+const pokemon = require('./modules/pokemon.js');
+const github = require('./modules/github.js');
 
 var hal = new megahal(4);
 
@@ -44,7 +45,7 @@ bot.onMessage(/.+/g, function (channel, from, message) {
 
 		var msg = message.split(' ');
 
-		console.log('hello');
+		// console.log('hello');
 
 		if (msg[0] == 'pokemon' &&
 			typeof msg[2] === 'undefined' &&
@@ -52,11 +53,13 @@ bot.onMessage(/.+/g, function (channel, from, message) {
 
 			warmUp();
 
+			say(['Looking up: ' + msg[1]], channel);
+
 			pokemon.retrieve(msg[1]).then(function (res) {
 				say(res, channel);
 				cooldown();
 			}.bind(this), function (error) {
-				console.log(error);
+				// console.log(error);
 				this.message(channel, '(shrug) [whoopsie: ' + error + ']');
 
 				cooldown();
@@ -66,25 +69,53 @@ bot.onMessage(/.+/g, function (channel, from, message) {
 
 	}
 
+	if (meetsCriteria('github', message, channel)) {
+
+		console.log('github?');
+
+		if (canDo()) {
+
+			console.log('can do');
+
+			warmUp();
+
+			var msg = message.split(' ');
+			var clean = msg.shift();
+			msg = msg.join(' ');
+
+			console.log(msg);
+
+			github.call(msg).then(function (data) {
+				say(data, channel);
+				cooldown();
+			}, function (error) {
+				say(error, channel);
+				cooldown();
+			});
+
+		}
+
+	}
+
 	if (meetsCriteria('bukkit', message, channel)) {
 
 		if (canDo()) {
 
-			console.log('bukkit?');
+			// console.log('bukkit?');
 
 			warmUp();
 
 			var msg = message.split(' ');
 
-			var gif = "";
+			var gif = '';
 
-			if (message[0] == "!") {
+			if (message[0] == '!') {
 				gif = msg[0].replace('!', '');
 			} else {
 				gif = msg[1];
 			}
 
-			console.log(gif);
+			// console.log(gif);
 
 			bukkit.get(gif).then(function (data) {
 				say(data, channel);
@@ -189,7 +220,7 @@ function writeToLog(file, text) {
 
 	fs.appendFile(file, text + '\r\n', function (err) {
 		if (err) return console.log(err);
-		console.log('log is updated');
+		// console.log('log is updated');
 	});
 
 }
@@ -226,15 +257,13 @@ function meetsCriteria(tool, message, channel) {
 			validRoom = true;
 		}
 
-
-
-		console.log("regex from config", toolConfig['regex']);
+		// console.log("regex from config", toolConfig['regex']);
 
 		if (typeof toolConfig['regex'] != 'undefined') {
-			var regex = new RegExp(toolConfig['regex'], "i");
-			console.log("regex", regex);
+			var regex = new RegExp(toolConfig['regex'], 'i');
+			// console.log("regex", regex);
 
-			console.log(message.match(regex));
+			// console.log(message.match(regex));
 
 			if (message.match(regex) != null) {
 				validMatch = true;
@@ -243,9 +272,9 @@ function meetsCriteria(tool, message, channel) {
 
 	}
 
-	console.log('tool', tool);
-	console.log('validMatch', validMatch);
-	console.log('validRoom', validRoom);
+	// console.log('tool', tool);
+	// console.log('validMatch', validMatch);
+	// console.log('validRoom', validRoom);
 
 	return (validMatch && validRoom);
 
