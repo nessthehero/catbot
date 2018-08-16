@@ -19,7 +19,7 @@ module.exports = {
 			'repo': 'brei-assemble-helpers'
 		},
 		{
-			'key': 'scss',
+			'key': 'hbs',
 			'repo': 'brei-assemble-structure'
 		},
 		{
